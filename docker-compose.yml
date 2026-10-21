@@ -1,0 +1,19 @@
+services:
+  asm-recon:
+    build:
+      context: .
+      # Flip to true to bake OWASP amass into the image (much larger build):
+      args:
+        INSTALL_AMASS: "false"
+    image: asm-recon:latest
+    # Everything in ./data on the host shows up at /data in the container:
+    # put your input files there, and outputs are written back there.
+    volumes:
+      - ./data:/data
+    # naabu CONNECT scans and httpx work without extra privileges.
+    # For naabu SYN scanning (-naabu with raw sockets) uncomment:
+    # cap_add:
+    #   - NET_RAW
+    #   - NET_ADMIN
+    # Pass recon arguments after `docker compose run --rm asm-recon ...`
+    # The ENTRYPOINT is the script, so you only supply flags.
